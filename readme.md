@@ -273,6 +273,123 @@ app.post('/sign', validate([
   Basic IP rate-limiting middleware for Express. Use to limit repeated requests to public APIs and/or endpoints
   such as password reset.
 
+### Mongoose
+
+  Mongoose is a MongoDB object modeling tool designed to work in asynchronous environment.
+
+```js
+const mongoose = require('mongoose')
+// 连接数据库
+await mongoose.connect('mongodb://127.0.0.1:17017/test', {
+  autoIndex: false,
+  autoCreate: false
+})
+```
+
+#### Schema
+
+  Each schema maps to a MongoDB collection and defines the shape of the documents within that collection.
+
+```js
+const { Schema } = mongoose
+
+const blogSchema = new Schema({
+  title: String,    // shorthand for { type: String }
+  author: String,
+  body: String,
+  isPublished: {
+    type: Boolean,
+    required: true
+  },
+  comments: [
+    {
+      body: String
+      date: Date
+    }
+  ],
+  tags: {
+    type: [String],
+    index: true // MongoDB supports secondary indexes. Disable automatically calls *createIndex* in production
+  }
+  // ...
+});
+
+const personSchema = new Schema({
+  name: {
+    first: String
+    last: String
+  },
+  author: {
+    type: ObjectId,
+    ref: Person
+  }
+}, {
+  virtuals: { // 类似于 Vue computed计算属性
+    fullName: {
+      get () {
+        return this.name.firstName + ' ' + this.name.last;
+      },
+      set (v) {
+        this.name.first = v.substr(0, v.indexOf(' '));
+        this.name.last = v.substr(v.indexOf(' ') + 1);
+      }
+    }
+  },
+  timestamps: {
+    createAt: 'create_at'
+  },
+  selectPopulatedPaths: true
+})
+```
+
+  If you use *toJSON()* or *toObject()* mongoose will not include virtuals by default. Pass *{ virtuals: true }*
+
+```js
+doc.toObject({ virtuals: true });
+// Equivalent:
+doc.toJSON({ virtuals: true });
+```
+
+  To use our schema definition, we need to convert out blogSchema into a Model we can work with.
+
+```js
+const Blog = mongoose.mode('Blog', blogSchema)
+// 数据库会自动创建一个 blogs集合
+
+/**
+ * When you create a new document with the automatically added )id property, Mongoose creates a new _id
+ * of type ObjectId to your document.
+*/
+const doc = new Blog()
+doc._id instanceof mongoose.Types.ObjectId
+```
+
+#### Statics
+
+  You can also add static functions to your model.
+
+- Add a function property to the second argument of the schema-constructor
+
+- Add a function property to **schema.statics**
+
+- Call the **Schema#static()** function
+
+```js
+const animalSchema = new Schema({ name: String, type: String },
+  {
+    statics: {
+      findByName(name) {
+        return this.find({ name: new RegExp(name, 'i') });
+      }
+    }
+  });
+
+animalSchema.statics.findByName = function(name) {
+  return this.find({ name: new RegExp(name, 'i') });
+};
+animalSchema.static('findByBreed', function(breed) { return this.find({ breed }); })
+```
+
 [morgan](https://www.npmmirror.com/package/morgan)
 
 [helmet](https://www.npmmirror.com/package/helmet)
@@ -294,3 +411,5 @@ app.post('/sign', validate([
 [Express中间件列表](https://www.expressjs.com.cn/resources/middleware.html)
 
 [Express-rate-limit](https://www.npmmirror.com/package/express-rate-limit)
+
+[Mongoose英文官网](https://mongoosejs.com/docs/guide)

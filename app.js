@@ -7,12 +7,23 @@ const morgan = require('morgan')
 const rfs = require('rotating-file-stream')
 const todoRouter = require('./router/todo');
 const chalk = require('chalk')
+const mongoose = require('mongoose')
 
 require('dotenv').config({
   path: ['.env', `.env.${process.env.NODE_ENV}`]
 })
 
 const app = express()
+
+const connect = async () => {
+  try {
+    await mongoose.connect('mongodb://127.0.0.1:27017/mongodb')
+    console.log(chalk.blue('database connect success!'))
+  } catch (err) {
+    console.log(chalk.red(err))
+  }
+}
+connect()
 
 app.use(helmet())
 app.use(compression())
@@ -76,6 +87,9 @@ app.use((req, res, next) => {
   const _json = res.json
   res.json = data => {
     res.json = _json
+    if (data && data.code !== undefined) {
+      return res.json(data)
+    }
     return res.json({
       code: 200,
       data,
@@ -92,15 +106,15 @@ app.use('/api/todo', todoRouter)
 app.use((req, res, next) => {
   res.status(404).json({
     code: 0,
-    message: 'Not Found'
+    msg: 'Not Found'
   })
 })
 // 错误处理
 app.use(function (err, req, res, next) {
-  res.status(200).json({
+  res.status(500).json({
     code: 0,
     data: null,
-    msg: err?.message
+    msg: typeof err === 'string' ? err : err?.message
   })
 })
 
