@@ -282,8 +282,21 @@ const mongoose = require('mongoose')
 // 连接数据库
 await mongoose.connect('mongodb://127.0.0.1:17017/test', {
   autoIndex: false,
-  autoCreate: false
+  autoCreate: false,
+  serverSelectionTimeoutMS: 30 * 1000,
+  /**
+   * If you call mongoose.connect() when your standalone MongoDB server is down, your mongoose.connect() call
+   * will only throw an error after 30 seconds
+  */
 })
+
+// connection events
+mongoose.connection.on('connected', () => console.log('connected'));
+mongoose.connection.on('open', () => console.log('open'));
+mongoose.connection.on('disconnected', () => console.log('disconnected'));
+mongoose.connection.on('reconnected', () => console.log('reconnected'));
+mongoose.connection.on('disconnecting', () => console.log('disconnecting'));
+mongoose.connection.on('close', () => console.log('close'));
 ```
 
 #### Schema
@@ -336,7 +349,8 @@ const personSchema = new Schema({
     }
   },
   timestamps: {
-    createAt: 'create_at'
+    createAt: 'created_at',
+    updatedAt: 'updated_at'
   },
   selectPopulatedPaths: true
 })
@@ -352,9 +366,13 @@ doc.toJSON({ virtuals: true });
 
   To use our schema definition, we need to convert out blogSchema into a Model we can work with.
 
+  An instance of model is called a document.
+  
 ```js
-const Blog = mongoose.mode('Blog', blogSchema)
+const Blog = mongoose.model('Blog', blogSchema)
 // 数据库会自动创建一个 blogs集合
+// Mongoose lets you start using your models immediately, without waiting for mongoose to establish a connection
+// to MongoDB.
 
 /**
  * When you create a new document with the automatically added )id property, Mongoose creates a new _id
@@ -390,6 +408,97 @@ animalSchema.statics.findByName = function(name) {
 animalSchema.static('findByBreed', function(breed) { return this.find({ breed }); })
 ```
 
+#### SchemeType
+
+- String
+- Number
+- Date
+- Buffer
+- Boolean
+- Mixed
+- ObjectId
+- Array
+- Map
+- Schema
+- UUID
+- BigInt
+
+```js
+const schema = new mongoose.Schema({
+  name: {
+    type: String,
+    unique: true,
+    index: true
+  },
+  type: {
+    type: String, // 如果想要定义一个字段为type
+    lowercase: true, // if you want to lowercase a string before saving
+    required: true, // if true adds a required validator for this property
+    default: 'hello', // function is also work, the return value of the function is used as the default
+    validate: () => {},
+    get: () {
+    },
+    set () {
+    }
+  },
+})
+
+const blog = new mongoose.Schema({
+  // String
+  title: {
+    type: String,
+    lowercase: true,
+    uppercase: true,
+    trim: true,
+    enum: [],
+    minLength: 10,
+    maxLength: 10,
+  },
+  // Number
+  age: {
+    type: Number,
+    min: 10,
+    max: 100,
+    enum: []
+  },
+  // Date
+  createdAt: {
+    type: Date,
+    min,
+    max,
+    expires
+  },
+  // ObjectId
+  id: mongoose.ObjectId,
+  // Boolean
+  isPublished: {
+    type: Boolean,
+    default: 1, // 1 '1' 'true' true, 'yes'
+  }
+  // Map
+  socialMediaHandles: {
+    type: Map,
+    of: String, // keys are always strings. you specify the type of values using 'of'
+  },
+  // UUID
+  randomId: {
+    type: Schema.Types.UUID
+  }
+})
+```
+
+  To create UUIDs, we recommend using Node's built-in UUID generator
+
+```js
+const { randomUUID } = require('crypto')
+const schema = new mongoose.Schema({
+  docId: {
+    type: 'UUID',
+    default: () => randomUUID()
+  }
+})
+```
+
 [morgan](https://www.npmmirror.com/package/morgan)
 
 [helmet](https://www.npmmirror.com/package/helmet)
@@ -413,3 +522,5 @@ animalSchema.static('findByBreed', function(breed) { return this.find({ breed })
 [Express-rate-limit](https://www.npmmirror.com/package/express-rate-limit)
 
 [Mongoose英文官网](https://mongoosejs.com/docs/guide)
+
+[Awesome-Nodejs](https://github.com/Viure/awesome-nodejs)

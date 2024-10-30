@@ -8,11 +8,11 @@ const validate = validations => {
     for (const validation of validations) {
       const result = await validation.run(req)
       const message = Array.isArray(result.array())
-        ? result.array().map(item => `${item.path}: ${item.msg}`).join(',')
+        ? result.array()
         : '参数校验未通过'
       if (!result.isEmpty()) {
-        return res.status(400).json({
-          msg: message,
+        return res.status(400).original_json({
+          msg: message.map(item => item.msg).join(','),
           code: 0,
           data: null
         })
