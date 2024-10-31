@@ -107,8 +107,8 @@ app.use(function (err, req, res, next) {
     code: 0,
     data: null,
     msg: typeof err === 'string'
-      ? err.message ? err.message : err
-      : err
+      ? err
+      : err.message ? err.message : err
   })
 })
 

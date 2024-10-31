@@ -219,16 +219,18 @@ npm install --save-dev cross-env
 npm install express-validator
 ```
 
-  check()
-  The **check()** function is the main API used for validating and sanitizing HTTP requests with express-validator.
+- body()
+- cookie()
+- header()
+- param()
+- query()
 
 ```js
-import { check } from 'express-validator';
-check(fields?: string | string[], message?: string)
-
 // 验证错误
 import { validationResult, query } from 'express-validator';
-app.post('/hello', query('person').notEmpty(), (req, res) => {
+
+// .trim() 会删除字符串的空格
+app.post('/hello', query('person').trim().notEmpty(), (req, res) => {
   const result = validationResult(req)
   // result to figure out if the request is valid of not
 });
@@ -267,6 +269,14 @@ app.post('/sign', validate([
   const user = await User.create({ ... });
 })
 ```
+
+- isArray()
+- isObject()
+- isString()
+- notEmpty()
+- isEmail()
+- isJWT()
+- isLength({ min, max })
 
 ### Express-rate-limit
 

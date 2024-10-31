@@ -11,7 +11,7 @@ const todoController = require('../controller/todo.js')
 */
 router.post('/add', validate(
   [
-    body('text', '代办事项不得为空').notEmpty(),
+    body('text', '代办事项不得为空').trim().notEmpty(),
     body('text', '参数类型不合法').isString(),
     body('text', '代办事项不得少于5个字符').isLength({
       min: 5,
