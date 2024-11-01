@@ -509,6 +509,48 @@ const schema = new mongoose.Schema({
 })
 ```
 
+#### Model
+
+```js
+const userSchema = new mongoose.Schema({
+  name: String,
+  password: String
+})
+
+const userModel = mongoose.model('user', userSchema)
+// 第一个参数是单数形式的集合名.
+// mongoose automatically looks for the plural, lowercased version of your model name.
+
+const user = new userModel({
+  username: 'hello',
+  password: '123456'
+})
+await user.save()
+
+
+// query
+await userModel.find()
+await userModel.findOne({
+  username: 'hello'
+})
+// 删除
+await userModel.deleteOne({
+  username: 'hello'
+})
+
+// 更新
+await userModel.updateOne({
+  username: 'hello'
+}, {
+  username: 'word'
+})
+
+// 监听
+userModel.watch().on('change', () => {
+  console.log(data)
+})
+```
+
 [morgan](https://www.npmmirror.com/package/morgan)
 
 [helmet](https://www.npmmirror.com/package/helmet)
