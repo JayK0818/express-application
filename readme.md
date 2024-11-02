@@ -551,6 +551,8 @@ userModel.watch().on('change', () => {
 })
 ```
 
+  **ObjectId** is a class, and ObjectIds are objects, When you convert an ObjectId to a string, using toString()
+
 [morgan](https://www.npmmirror.com/package/morgan)
 
 [helmet](https://www.npmmirror.com/package/helmet)

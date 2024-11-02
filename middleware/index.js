@@ -50,7 +50,7 @@ const userAuthorization = (flag = true) => {
       }
       req.user = {
         username: user.username,
-        id: user._id
+        id: user._id.toString()
       }
       next()
     } catch (err) {
