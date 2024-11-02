@@ -1,5 +1,5 @@
 const express = require('express')
-const { validate } = require('../middleware/index.js')
+const { validate, userAuthorization } = require('../middleware/index.js')
 const { body } = require('express-validator')
 
 // creates a new router object.
@@ -10,6 +10,7 @@ const todoController = require('../controller/todo.js')
  * @description 创建代办事项
 */
 router.post('/add', validate(
+  userAuthorization(),
   [
     body('text', '代办事项不得为空').trim().notEmpty(),
     body('text', '参数类型不合法').isString(),
@@ -23,6 +24,6 @@ router.post('/add', validate(
 /**
  * @description 获取代办事项列表
 */
-router.get('/list', todoController.getTodoList)
+router.get('/list', userAuthorization(), todoController.getTodoList)
 
 module.exports = router

@@ -5,13 +5,6 @@ const { genLoginToken } = require('../util/index')
 const chalk = require('chalk')
 
 /**
- * @description 监听user
-*/
-/* UserModel.watch().on('change', (data) => {
-  console.log(chalk.yellow(`user-modal-updated: ${data}`))
-}) */
-
-/**
  * @description 用户注册
 */
 const userRegistry = async (req, res, next) => {
@@ -30,7 +23,7 @@ const userRegistry = async (req, res, next) => {
       throw Error('邮箱已经注册')
     }
     const hash_password = await argon.hash(password)
-    const user = new userModel({
+    const user = new UserModel({
       username,
       password: hash_password,
       email
@@ -51,7 +44,6 @@ const userLogin = async (req, res, next) => {
     const user = await UserModel.findOne({
       username
     })
-    console.log(user, user._id)
     if (!user) {
       throw new Error('用户不存在, 请先注册!')
     }
@@ -61,9 +53,11 @@ const userLogin = async (req, res, next) => {
         user_id: user._id
       })
       res.json({
-        token
+        token,
+        username
       })
     } else {
+      console.log('错了吗')
       throw new Error('密码错误')
     }
   } catch (err) {
