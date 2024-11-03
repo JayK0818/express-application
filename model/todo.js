@@ -23,6 +23,11 @@ const todoSchema = new mongoose.Schema({
   },
 })
 
+todoSchema.pre('save', (next) => {
+  console.log('todo-save')
+  next()
+})
+
 const TodoModel = mongoose.model('todo', todoSchema)
 
 module.exports = TodoModel

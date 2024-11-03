@@ -7,8 +7,11 @@ const morgan = require('morgan')
 const rfs = require('rotating-file-stream')
 const todoRouter = require('./router/todo')
 const userRouter = require('./router/user')
+const viewsRouter = require('./router/views')
 const chalk = require('chalk')
 const mongoose = require('mongoose')
+const errorhandler = require('errorhandler')
+const responseTime = require('response-time')
 
 require('dotenv').config({
   path: ['.env', `.env.${process.env.NODE_ENV}`],
@@ -17,8 +20,28 @@ const PORT = process.env.PORT || 3000
 
 const app = express()
 
+/**
+ * create a middleware that adds a X-Response-Time header to responses.
+ */
+app.use(responseTime())
+
 app.use(helmet())
 app.use(compression())
+// 设置模版引擎
+
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'ejs')
+
+// 第三方库
+app.use(express.static(path.join(__dirname, 'node_modules')))
+
+// 静态资源
+app.use(
+  express.static(path.join(__dirname, './public'), {
+    extensions: ['html'],
+  })
+)
+
 app.use((req, res, next) => {
   console.log(
     chalk.bold.yellow(`
@@ -103,6 +126,14 @@ app.use((req, res, next) => {
 // 路由
 app.use('/api/todo', todoRouter)
 app.use('/api/user', userRouter)
+app.use('/', viewsRouter)
+
+/**
+ * Development-only error handler middleware
+ */
+if (process.env.NODE_ENV === 'development') {
+  app.use(errorhandler())
+}
 
 // 404处理
 app.use((req, res, next) => {

@@ -21,7 +21,12 @@ const addTodo = async (req, res, next) => {
  */
 const getTodoList = async (req, res, next) => {
   try {
-    const result = await TodoModel.find().populate('user')
+    const result = await TodoModel.find(
+      {
+        is_del: 0,
+      },
+      '_id text completed user'
+    ).populate('user', '_id username email')
     res.json(result)
   } catch (err) {
     next(err)

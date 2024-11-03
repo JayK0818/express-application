@@ -41,6 +41,24 @@ router.use(function (req, res, next) {
 });
 ```
 
+  It is important to ensure that Express catches all errors that occur while running route handlers and middleware.
+
+```js
+app.get('/', (req, res) => {
+  throw new Error('Broken') // Express will catch this on its own
+})
+
+app.get('/', function (req, res, next) {
+  fs.readFile('/file-does-not-exist', function (err, data) {
+    if (err) {
+      next(err) // Pass errors to Express.
+    } else {
+      res.send(data)
+    }
+  })
+})
+```
+
   Express comes with a built-in error handler that takes care of any errors that might be encountered in the app.
   This default error-handing middleware function is added at the end of the middleware function stack.
 
@@ -509,6 +527,32 @@ const schema = new mongoose.Schema({
 })
 ```
 
+  Subdocuments are documents embedded in other documents. Mongoose has two distinct notions of subdocuments:
+  array of subdocuments and single nested subdocuments.
+
+```js
+const childSchema = new Schema({
+  name: String
+})
+
+const parentSchema = new Schema({
+  children: [childSchema],
+  child: childSchema
+})
+```
+
+  Note that populated documents are not subdocuments in Mongoose. Subdocuments are similar to normal documents.
+  The major difference is that subdocuments are not saved individually. they area saved whenever their top-level
+  parent document is saved.
+
+```js
+const Parent = mongoose.model('Parent', parentSchema);
+const parent = new Parent({ children: [{ name: 'Matt' }, { name: 'Sarah' }] });
+parent.children[0].name = 'Matthew';
+
+await parent.save()
+```
+
 #### Model
 
 ```js
@@ -552,6 +596,57 @@ userModel.watch().on('change', () => {
 ```
 
   **ObjectId** is a class, and ObjectIds are objects, When you convert an ObjectId to a string, using toString()
+
+#### Queries
+
+- Model.deleteMany()
+- Model.deleteOne()
+- Model.find()
+- Model.findById()
+- Model.findByIdAndDelete()
+- Model.findByIdAndRemove()
+- Model.findByIdAndUpdate()
+- Model.findOne()
+- Model.findOneAndDelete()
+- Model.findOneAndReplace()
+- Model.findOneAndUpdate()
+- Model.replaceOne()
+- Model.updateMany()
+- Model.updateOne()
+
+  A mongoose query can be executed in one of two ways
+
+1. 回调函数
+2. .then()
+
+```js
+const PersonModel = mongoose.model('Person', personSchema)
+const person = await PersonModel.findOne({
+  name: 'hello'
+});
+
+const query = PersonModel.findOne({
+  name: 'hello'
+})
+
+// 🈯只返回这两个字段
+query.select('name age')
+// execute the query at a later time
+const person = await query.exec()
+
+// 也可以使用链式调用的语法
+await Person.
+  find({
+    occupation: /host/,
+    'name.last': 'Ghost',
+    age: { $gt: 17, $lt: 66 },
+    likes: { $in: ['vaporizing', 'talking'] }
+  }).
+  limit(10).
+  sort({ occupation: -1 }).
+  select({ name: 1, occupation: 1 }).
+  exec();
+```
 
 [morgan](https://www.npmmirror.com/package/morgan)
 
