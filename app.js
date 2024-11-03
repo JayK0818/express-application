@@ -1,7 +1,7 @@
 const express = require('express')
-const helmet = require('helmet');
-const fs = require('node:fs');
-const path = require('node:path');
+const helmet = require('helmet')
+const fs = require('node:fs')
+const path = require('node:path')
 const compression = require('compression')
 const morgan = require('morgan')
 const rfs = require('rotating-file-stream')
@@ -11,7 +11,7 @@ const chalk = require('chalk')
 const mongoose = require('mongoose')
 
 require('dotenv').config({
-  path: ['.env', `.env.${process.env.NODE_ENV}`]
+  path: ['.env', `.env.${process.env.NODE_ENV}`],
 })
 const PORT = process.env.PORT || 3000
 
@@ -20,13 +20,14 @@ const app = express()
 app.use(helmet())
 app.use(compression())
 app.use((req, res, next) => {
-   console.log(chalk.bold.yellow(`
+  console.log(
+    chalk.bold.yellow(`
     Date: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}
     Method: ${req.method}
-    URL: ${req.url}`
-  ))
+    URL: ${req.url}`)
+  )
   next()
-});
+})
 
 app.use((req, res, next) => {
   next()
@@ -35,30 +36,37 @@ app.use((req, res, next) => {
 // 生成日志文件的逻辑
 const logFileGenerator = () => {
   const date = new Date()
-  const pad = num => (num > 9 ? "" : "0") + num;
-  const month = date.getFullYear() + "" + pad(date.getMonth() + 1)
+  const pad = (num) => (num > 9 ? '' : '0') + num
+  const month = date.getFullYear() + '' + pad(date.getMonth() + 1)
   const day = pad(date.getDate())
   return path.resolve(process.cwd(), 'log', `${month}/${month}${day}.log`)
 }
 const stream = rfs.createStream(logFileGenerator, {
-  size: "10M",
-  interval: "3d"
+  size: '10M',
+  interval: '3d',
 })
-app.use(morgan('Date: :date[web] HTTP: :http-version User-Agent: :user-agent Method :method URL: :url :status', {
-  stream,
-  immediate: true
-}))
+app.use(
+  morgan(
+    'Date: :date[web] HTTP: :http-version User-Agent: :user-agent Method :method URL: :url :status',
+    {
+      stream,
+      immediate: true,
+    }
+  )
+)
 
 // local variables within the application
 app.locals.title = 'express application'
 
 // This is a built-in middleware function in Express. It parses incoming requests with JSON payloads and is based on body-parser.
-app.use(express.json({
-  inflate: true,  // enables or disables handling deflated (compressed) bodies
-  limit: '200kb', // controls the maximum request body size
-  reviver: null,  // passed directly to JSON.parse as second argument.
-  type: ['application/json'], // determine what media type the middleware will parse.
-}));
+app.use(
+  express.json({
+    inflate: true, // enables or disables handling deflated (compressed) bodies
+    limit: '200kb', // controls the maximum request body size
+    reviver: null, // passed directly to JSON.parse as second argument.
+    type: ['application/json'], // determine what media type the middleware will parse.
+  })
+)
 
 /**
  * app.use(express.raw()) This is a built-in middleware function in Express, It parses incoming request payloads into a Buffer
@@ -67,24 +75,26 @@ app.use(express.json({
 
 /**
  * It parses incoming requests with urlencoded payloads and is based on body-parser.
-*/
-app.use(express.urlencoded({
-  extended: true, // allows to choose between parsing the URL-encoded data with the querystring library or the qs library
-  type: 'application/x-www-form-urlencoded',  // determine what media type the middleware will parse
-  parameterLimit: 1000  // controls the maximum number of parameters
-}));
+ */
+app.use(
+  express.urlencoded({
+    extended: true, // allows to choose between parsing the URL-encoded data with the querystring library or the qs library
+    type: 'application/x-www-form-urlencoded', // determine what media type the middleware will parse
+    parameterLimit: 1000, // controls the maximum number of parameters
+  })
+)
 
 // 拦截响应
 app.use((req, res, next) => {
   const _json = res.json
   res.original_json = _json
   // 改写res.json
-  res.json = data => {
+  res.json = (data) => {
     res.json = _json
     return res.json({
       code: 200,
       data,
-      msg: 'success'
+      msg: 'success',
     })
   }
   next()
@@ -98,7 +108,7 @@ app.use('/api/user', userRouter)
 app.use((req, res, next) => {
   res.status(404).original_json({
     code: 0,
-    msg: 'Not Found'
+    msg: 'Not Found',
   })
 })
 // 错误处理
@@ -106,9 +116,7 @@ app.use(function (err, req, res, next) {
   res.status(500).original_json({
     code: 0,
     data: null,
-    msg: typeof err === 'string'
-      ? err
-      : err.message ? err.message : err
+    msg: typeof err === 'string' ? err : err.message ? err.message : err,
   })
 })
 
@@ -117,7 +125,7 @@ const connect = async () => {
     // console.log(chalk.blue('正在连接数据库...'))
     await mongoose.connect('mongodb://127.0.0.1:27017/mongodb', {
       autoIndex: process.env.NODE_ENV === 'development',
-      serverSelectionTimeoutMS: 30 * 1000
+      serverSelectionTimeoutMS: 30 * 1000,
     })
     console.log(chalk.blue('数据库连接成!'))
     app.listen(PORT, () => {

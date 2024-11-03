@@ -6,18 +6,18 @@ const chalk = require('chalk')
 
 /**
  * @description 用户注册
-*/
+ */
 const userRegistry = async (req, res, next) => {
   try {
     const { username, password, email } = req.body
     const isUserExist = await UserModel.findOne({
-      username
+      username,
     })
     if (isUserExist) {
       throw new Error('用户名已存在')
     }
     const isEmailExist = await UserModel.findOne({
-      email
+      email,
     })
     if (isEmailExist) {
       throw Error('邮箱已经注册')
@@ -26,7 +26,7 @@ const userRegistry = async (req, res, next) => {
     const user = new UserModel({
       username,
       password: hash_password,
-      email
+      email,
     })
     await user.save()
     res.json(null)
@@ -37,12 +37,12 @@ const userRegistry = async (req, res, next) => {
 
 /**
  * @description 用户登录
-*/
+ */
 const userLogin = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body
     const user = await UserModel.findOne({
-      username
+      username,
     })
     if (!user) {
       throw new Error('用户不存在, 请先注册!')
@@ -50,11 +50,11 @@ const userLogin = async (req, res, next) => {
     const isMatch = await argon.verify(user.password, password)
     if (isMatch) {
       const token = genLoginToken({
-        user_id: user._id
+        user_id: user._id,
       })
       res.json({
         token,
-        username
+        username,
       })
     } else {
       console.log('错了吗')
@@ -67,5 +67,5 @@ const userLogin = async (req, res, next) => {
 
 module.exports = {
   userRegistry,
-  userLogin
+  userLogin,
 }

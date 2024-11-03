@@ -6,17 +6,21 @@ const todoSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minLength: 5,
-    maxLength: 50
+    maxLength: 50,
   },
   completed: {
     type: Boolean,
-    required: true
+    required: true,
   },
   user: {
     type: mongoose.Types.ObjectId,
     required: true,
-    ref: 'user'
-  }
+    ref: 'user',
+  },
+  is_del: {
+    type: Number,
+    default: 0,
+  },
 })
 
 const TodoModel = mongoose.model('todo', todoSchema)

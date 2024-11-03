@@ -7,18 +7,18 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true,
     minLength: 6,
-    maxLength: 20
+    maxLength: 20,
   },
   password: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   email: {
     type: String,
     required: true,
-    trim: true
-  }
+    trim: true,
+  },
 })
 
 const UserModel = mongoose.model('user', userSchema)

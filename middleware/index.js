@@ -4,8 +4,8 @@ const UserModel = require('../model/user')
 
 /**
  * @description 校验body
-*/
-const validate = validations => {
+ */
+const validate = (validations) => {
   return async (req, res, next) => {
     for (const validation of validations) {
       const result = await validation.run(req)
@@ -14,9 +14,9 @@ const validate = validations => {
         : '参数校验未通过'
       if (!result.isEmpty()) {
         return res.status(400).original_json({
-          msg: message.map(item => item.msg).join(','),
+          msg: message.map((item) => item.msg).join(','),
           code: 0,
-          data: null
+          data: null,
         })
       }
     }
@@ -26,18 +26,20 @@ const validate = validations => {
 
 /**
  * @description 用户token解析中间件
-*/
+ */
 const userAuthorization = (flag = true) => {
   return async (req, res, next) => {
     if (!flag) {
       return next()
     }
     try {
-      const token = ((req.headers['authorization'] ?? '').split('Bearer')[1] ?? '').trim()
+      const token = (
+        (req.headers['authorization'] ?? '').split('Bearer')[1] ?? ''
+      ).trim()
       if (!token) {
         return res.status(401).original_json({
           msg: '请传递token',
-          code: 0
+          code: 0,
         })
       }
       const result = validateToken(token)
@@ -50,7 +52,7 @@ const userAuthorization = (flag = true) => {
       }
       req.user = {
         username: user.username,
-        id: user._id.toString()
+        id: user._id.toString(),
       }
       next()
     } catch (err) {
@@ -61,5 +63,5 @@ const userAuthorization = (flag = true) => {
 
 module.exports = {
   validate,
-  userAuthorization
+  userAuthorization,
 }
