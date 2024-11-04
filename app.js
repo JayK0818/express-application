@@ -25,7 +25,15 @@ const app = express()
  */
 app.use(responseTime())
 
-app.use(helmet())
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        'script-src': ["'self'", "'unsafe-eval'"],
+      },
+    },
+  })
+)
 app.use(compression())
 // 设置模版引擎
 

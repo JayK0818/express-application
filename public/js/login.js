@@ -1,38 +1,58 @@
-$(document).ready(function () {
-  const validate = () => {
-    const username = $('.username-input').val()
-    const password = $('.password-input').val()
-    if (!username.trim()) {
-      $('.username-input+.invalid-feedback').css({
-        display: 'block',
+const { createApp, ref, shallowRef } = window.Vue
+;(function () {
+  const app = createApp({
+    setup() {
+      const state = ref({
+        username: '',
+        password: '',
       })
-      return null
-    } else {
-      $('.username-input+.invalid-feedback').css({
-        display: 'none',
+      const formRef = ref(null)
+      const rules = shallowRef({
+        username: [
+          {
+            required: true,
+            validator(rule, value = '') {
+              const v = value.trim()
+              const reg = /^[a-zA-Z0-9]+$/
+              if (v.length === 0) {
+                return new Error('用户名不得为空')
+              } else if (v.length < 6 || v.length > 20) {
+                return new Error('用户名字符长度为6-20')
+              } else if (!reg.test(v)) {
+                return new Error('用户名只能包含字母和数字')
+              }
+              return true
+            },
+            trigger: ['input', 'blur'],
+          },
+        ],
+        password: [
+          {
+            required: true,
+            validator(rule, value) {
+              if (!value) {
+                return new Error('密码不得为空')
+              }
+              return true
+            },
+          },
+        ],
       })
-    }
-    if (!password.trim()) {
-      $('.password-input+.invalid-feedback').css({
-        display: 'block',
-      })
-      return null
-    } else {
-      $('.password-input+.invalid-feedback').css({
-        display: 'none',
-      })
-    }
-    return {
-      username,
-      password,
-    }
-  }
-  $('.login-button').on('click', () => {
-    const isValidate = validate()
-    if (!isValidate) {
-      return
-    }
-    const { username, password } = isValidate
-    console.log(username, password)
+      const handleLogin = () => {
+        formRef.value?.validate((errors) => {
+          if (!errors) {
+            console.log('开始登录')
+          }
+        })
+      }
+      return {
+        state,
+        rules,
+        formRef,
+        handleLogin,
+      }
+    },
   })
-})
+  app.use(naive)
+  app.mount('#login-form')
+})()
