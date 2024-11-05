@@ -35,15 +35,20 @@ const { createApp, ref, shallowRef } = window.Vue
               }
               return true
             },
+            trigger: ['input', 'blur'],
           },
         ],
       })
       const handleLogin = () => {
-        formRef.value?.validate((errors) => {
-          if (!errors) {
-            console.log('开始登录')
-          }
-        })
+        try {
+          formRef.value?.validate((errors) => {
+            if (!errors) {
+              console.log('开始登录')
+            }
+          })
+        } catch (err) {
+          console.log(err)
+        }
       }
       return {
         state,

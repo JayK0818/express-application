@@ -8,7 +8,9 @@ const userLogin = async (req, res, next) => {
 /**
  * @description 用户注册
  */
-const userRegister = async (req, res, next) => {}
+const userRegister = async (req, res, next) => {
+  res.render('register')
+}
 
 /**
  * @description 用户todo-list
