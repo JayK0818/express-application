@@ -10,8 +10,9 @@ const userRouter = require('./router/user')
 const viewsRouter = require('./router/views')
 const chalk = require('chalk')
 const mongoose = require('mongoose')
-const errorhandler = require('errorhandler')
+// const errorhandler = require('errorhandler')
 const responseTime = require('response-time')
+const session = require('express-session')
 
 require('dotenv').config({
   path: ['.env', `.env.${process.env.NODE_ENV}`],
@@ -25,6 +26,20 @@ const app = express()
  */
 app.use(responseTime())
 
+app.use(
+  session({
+    cookie: {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 2,
+      sameSite: true,
+      secure: false, // When setting this to true, clients will not send the cookie back to the server in the future if the browser
+      // done not have an HTTPS connection.
+    },
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+)
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -139,9 +154,9 @@ app.use('/', viewsRouter)
 /**
  * Development-only error handler middleware
  */
-if (process.env.NODE_ENV === 'development') {
+/* if (process.env.NODE_ENV === 'development') {
   app.use(errorhandler())
-}
+} */
 
 // 404处理
 app.use((req, res, next) => {

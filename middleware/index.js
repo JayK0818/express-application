@@ -27,9 +27,12 @@ const validate = (validations) => {
 /**
  * @description 用户token解析中间件
  */
-const userAuthorization = (flag = true) => {
+const userAuthorization = ({
+  is_auth_required = true,
+  is_redirect = false,
+} = {}) => {
   return async (req, res, next) => {
-    if (!flag) {
+    if (!is_auth_required) {
       return next()
     }
     try {
@@ -44,6 +47,9 @@ const userAuthorization = (flag = true) => {
       }
       const result = validateToken(token)
       if (!result) {
+        if (is_redirect) {
+          return res.redirect('/login')
+        }
         return next('请重新登录')
       }
       const user = await UserModel.findById(result.user_id)

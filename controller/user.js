@@ -49,15 +49,23 @@ const userLogin = async (req, res, next) => {
     }
     const isMatch = await argon.verify(user.password, password)
     if (isMatch) {
+      const user_id = user._id
       const token = genLoginToken({
-        user_id: user._id,
+        user_id,
+      })
+      // 设置session
+      req.session.user = user_id
+      // 设置cookie (此处作为练习, 实际未使用)
+      res.cookie('express-version', 1, {
+        httpOnly: true,
+        secure: false,
+        sameSite: true,
       })
       res.json({
         token,
         username,
       })
     } else {
-      console.log('错了吗')
       throw new Error('密码错误')
     }
   } catch (err) {
