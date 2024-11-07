@@ -10,9 +10,9 @@ const userRouter = require('./router/user')
 const viewsRouter = require('./router/views')
 const chalk = require('chalk')
 const mongoose = require('mongoose')
-// const errorhandler = require('errorhandler')
 const responseTime = require('response-time')
 const session = require('express-session')
+const mongoStore = require('connect-mongo')
 
 require('dotenv').config({
   path: ['.env', `.env.${process.env.NODE_ENV}`],
@@ -38,6 +38,11 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: mongoStore.create({
+      autoRemove: 'interval',
+      autoRemoveInterval: 10, // in minutes
+      mongoUrl: 'mongodb://127.0.0.1:27017/mongodb',
+    }),
   })
 )
 app.use(

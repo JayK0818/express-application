@@ -21,13 +21,34 @@ const addTodo = async (req, res, next) => {
  */
 const getTodoList = async (req, res, next) => {
   try {
+    // req.session.user 为下发cookie时赋的值, 过期时值为undefined
+    console.log(req.session.user, req.user)
     const result = await TodoModel.find(
       {
         is_del: 0,
+        user: req.user.id,
       },
       '_id text completed user'
     ).populate('user', '_id username email')
     res.json(result)
+  } catch (err) {
+    next(err)
+  }
+}
+
+/**
+ * @description 根据id查询todo
+ */
+const getTodo = async (req, res, next) => {
+  try {
+    const query = TodoModel.findOne({
+      user: req.user.id,
+      _id: req.params.id,
+      is_del: 0,
+    })
+    query.select('text completed')
+    const todo = await query.exec()
+    res.json(todo)
   } catch (err) {
     next(err)
   }
@@ -91,6 +112,7 @@ const deleteTodo = async (req, res, next) => {
 module.exports = {
   addTodo,
   getTodoList,
+  getTodo,
   updateTodo,
   deleteTodo,
 }

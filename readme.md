@@ -301,6 +301,31 @@ app.post('/sign', validate([
   Basic IP rate-limiting middleware for Express. Use to limit repeated requests to public APIs and/or endpoints
   such as password reset.
 
+### connect-mongo
+
+  MongoDB session store for Express and Connect.
+
+```shell
+npm install connect-mongo
+```
+
+```js
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
+
+app.use(session({
+  // session-options,
+  store: MongoStore.create({
+    mongoUrl: 'mongodb://127.0.0.1:27017/mongodb',
+    autoRemove: 'interval', // 自动删除过期的session
+    autoRemoveInterval: 10, // 间隔 10分钟
+    // 其他选项
+    dbName: 'mongodb', // 数据库名称
+    collectionName: 'sessions',   // 集合名称
+  });
+}))
+```
+
 ### Mongoose
 
   Mongoose is a MongoDB object modeling tool designed to work in asynchronous environment.
@@ -673,3 +698,5 @@ await Person.
 [Mongoose英文官网](https://mongoosejs.com/docs/guide)
 
 [Awesome-Nodejs](https://github.com/Viure/awesome-nodejs)
+
+[connect-mongo](https://www.npmmirror.com/package/connect-mongo)

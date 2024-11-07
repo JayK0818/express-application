@@ -35,6 +35,9 @@ const userAuthorization = ({
     if (!is_auth_required) {
       return next()
     }
+    if (!req.session.user) {
+      return res.redirect('/login')
+    }
     try {
       const token = (
         (req.headers['authorization'] ?? '').split('Bearer')[1] ?? ''

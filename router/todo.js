@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const { validate, userAuthorization } = require('../middleware/index.js')
-const { body } = require('express-validator')
+const { body, param } = require('express-validator')
 const { validateMongooseId } = require('../util/index')
 
 // creates a new router object.
@@ -58,6 +58,20 @@ router.post(
     body('id').custom(validateMongooseId),
   ]),
   todoController.deleteTodo
+)
+
+/**
+ * @description 查询一个todo
+ */
+router.get(
+  '/get-todo/:id',
+  userAuthorization(),
+  validate([
+    param('id', '代办事项id不得为空').notEmpty(),
+    param('id', 'id类型不合法').trim().isString(),
+    param('id').custom(validateMongooseId),
+  ]),
+  todoController.getTodo
 )
 
 module.exports = router
