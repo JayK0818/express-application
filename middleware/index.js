@@ -27,16 +27,10 @@ const validate = (validations) => {
 /**
  * @description 用户token解析中间件
  */
-const userAuthorization = ({
-  is_auth_required = true,
-  is_redirect = false,
-} = {}) => {
+const userAuthorization = ({ is_auth_required = true } = {}) => {
   return async (req, res, next) => {
     if (!is_auth_required) {
       return next()
-    }
-    if (!req.session.user) {
-      return res.redirect('/login')
     }
     try {
       const token = (
@@ -70,7 +64,19 @@ const userAuthorization = ({
   }
 }
 
+/**
+ * @description 状态过期是否可以访问页面
+ */
+const userSessionAuthorization = (req, res, next) => {
+  const user = req.session.user
+  if (!user) {
+    return res.redirect('/login')
+  }
+  next()
+}
+
 module.exports = {
   validate,
   userAuthorization,
+  userSessionAuthorization,
 }

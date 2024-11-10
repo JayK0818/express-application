@@ -1,0 +1,28 @@
+.footer {
+  padding: 12px 0;
+  text-align: center;
+  background-color: #ffffff;
+  z-index: 20;
+  color: rgb(7, 17, 27);
+}
+.login-page,
+.register-page {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+.login-page[v-cloak],
+.register-page[v-cloak] {
+  display: none;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ffffff;
+}

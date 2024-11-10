@@ -73,7 +73,17 @@ const userLogin = async (req, res, next) => {
   }
 }
 
+/**
+ * @description 用户退出登录
+ */
+const userLogout = async (req, res, next) => {
+  req.session.destroy(() => {
+    res.redirect('/')
+  })
+}
+
 module.exports = {
   userRegistry,
   userLogin,
+  userLogout,
 }

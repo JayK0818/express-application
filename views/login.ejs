@@ -6,22 +6,9 @@
     <%- include('public'); -%>
     <title>登录</title>
     <style>
-      body {
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        background-color: #ffffff;
-      }
-      #login-form[v-cloak] {
-        display: none;
-      }
       #login-form {
         padding: 0 16px;
+        width: 100%;
       }
       #login-form .title {
         padding: 16px 0;
@@ -33,36 +20,41 @@
   </head>
   <body>
     <%- include('layout/header'); -%>
-    <div id="login-form">
-      <div class="title">用户登录</div>
-      <n-grid cols="24" item-responsive>
-        <n-grid-item
-          span="0:24 560:18 720:12 1200:8"
-          offset="0 560:3 720:6 1200:8"
-        >
-          <n-form :model="state" :rules="rules" ref="formRef">
-            <n-form-item path="username" label="用户名">
-              <n-input v-model:value="state.username" @keydown.enter.prevent />
-            </n-form-item>
-            <n-form-item path="password" label="密码">
-              <n-input v-model:value="state.password" type="password" />
-            </n-form-item>
-            <n-space justify="end">
-              <n-checkbox> 记住我 </n-checkbox>
-            </n-space>
-            <n-form-item>
-              <n-button
-                round
-                type="primary"
-                size="large"
-                @click="handleLogin"
-                block
-                >登录</n-button
-              >
-            </n-form-item>
-          </n-form>
-        </n-grid-item>
-      </n-grid>
+    <div class="login-page">
+      <div id="login-form">
+        <div class="title">用户登录</div>
+        <n-grid cols="24" item-responsive>
+          <n-grid-item
+            span="0:24 560:18 720:12 1200:8"
+            offset="0 560:3 720:6 1200:8"
+          >
+            <n-form :model="state" :rules="rules" ref="formRef">
+              <n-form-item path="username" label="用户名">
+                <n-input
+                  v-model:value="state.username"
+                  @keydown.enter.prevent
+                />
+              </n-form-item>
+              <n-form-item path="password" label="密码">
+                <n-input v-model:value="state.password" type="password" />
+              </n-form-item>
+              <n-space justify="end">
+                <n-checkbox> 记住我 </n-checkbox>
+              </n-space>
+              <n-form-item>
+                <n-button
+                  round
+                  type="primary"
+                  size="large"
+                  @click="handleLogin"
+                  block
+                  >登录</n-button
+                >
+              </n-form-item>
+            </n-form>
+          </n-grid-item>
+        </n-grid>
+      </div>
     </div>
     <%- include('layout/footer'); -%>
     <script type="text/javascript" src="js/login.js"></script>

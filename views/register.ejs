@@ -6,22 +6,9 @@
     <%- include('public'); -%>
     <title>注册</title>
     <style>
-      body {
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        background-color: #ffffff;
-      }
-      #register-form[v-cloak] {
-        display: none;
-      }
       #register-form {
         padding: 0 16px;
+        width: 100%;
       }
       #register-form .title {
         padding: 16px 0;
@@ -33,36 +20,41 @@
   </head>
   <body>
     <%- include('layout/header'); -%>
-    <div id="register-form">
-      <div class="title">用户注册</div>
-      <n-grid cols="24" item-responsive>
-        <n-grid-item
-          span="0:24 560:18 720:12 1200:8"
-          offset="0 560:3 720:6 1200:8"
-        >
-          <n-form :model="state" :rules="rules" ref="formRef">
-            <n-form-item path="username" label="用户名">
-              <n-input v-model:value="state.username" @keydown.enter.prevent />
-            </n-form-item>
-            <n-form-item path="password" label="密码">
-              <n-input v-model:value="state.password" type="password" />
-            </n-form-item>
-            <n-form-item path="email" label="邮箱">
-              <n-input v-model:value="state.email"></n-input>
-            </n-form-item>
-            <n-form-item>
-              <n-button
-                round
-                type="primary"
-                size="large"
-                @click="handleRegister"
-                block
-                >注册</n-button
-              >
-            </n-form-item>
-          </n-form>
-        </n-grid-item>
-      </n-grid>
+    <div class="register-page">
+      <div id="register-form">
+        <div class="title">用户注册</div>
+        <n-grid cols="24" item-responsive>
+          <n-grid-item
+            span="0:24 560:18 720:12 1200:8"
+            offset="0 560:3 720:6 1200:8"
+          >
+            <n-form :model="state" :rules="rules" ref="formRef">
+              <n-form-item path="username" label="用户名">
+                <n-input
+                  v-model:value="state.username"
+                  @keydown.enter.prevent
+                />
+              </n-form-item>
+              <n-form-item path="password" label="密码">
+                <n-input v-model:value="state.password" type="password" />
+              </n-form-item>
+              <n-form-item path="email" label="邮箱">
+                <n-input v-model:value="state.email"></n-input>
+              </n-form-item>
+              <n-form-item>
+                <n-button
+                  round
+                  type="primary"
+                  size="large"
+                  @click="handleRegister"
+                  block
+                  >注册</n-button
+                >
+              </n-form-item>
+            </n-form>
+          </n-grid-item>
+        </n-grid>
+      </div>
     </div>
     <%- include('layout/footer'); -%>
     <script type="text/javascript" src="js/register.js"></script>
