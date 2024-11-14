@@ -33,13 +33,21 @@
                 <n-input
                   v-model:value="state.username"
                   @keydown.enter.prevent
+                  placeholder="用户名 (6-20位 只能包含字母和数字)"
                 />
               </n-form-item>
               <n-form-item path="password" label="密码">
-                <n-input v-model:value="state.password" type="password" />
+                <n-input
+                  v-model:value="state.password"
+                  type="password"
+                  placeholder="请输入密码"
+                />
               </n-form-item>
               <n-form-item path="email" label="邮箱">
-                <n-input v-model:value="state.email"></n-input>
+                <n-input
+                  v-model:value="state.email"
+                  placeholder="请输入邮箱"
+                ></n-input>
               </n-form-item>
               <n-form-item>
                 <n-button

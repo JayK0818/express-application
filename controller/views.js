@@ -15,10 +15,20 @@ const userRegister = async (req, res, next) => {
 /**
  * @description 用户todo-list
  */
-const userTodoList = async (req, res, next) => {}
+const userTodoList = async (req, res, next) => {
+  res.render('todo-list')
+}
+
+/**
+ * @description 首页
+ */
+const homePage = async (req, res, next) => {
+  res.render('index')
+}
 
 module.exports = {
   userLogin,
   userRegister,
   userTodoList,
+  homePage,
 }

@@ -33,10 +33,15 @@
                 <n-input
                   v-model:value="state.username"
                   @keydown.enter.prevent
+                  placeholder="请输入用户名"
                 />
               </n-form-item>
               <n-form-item path="password" label="密码">
-                <n-input v-model:value="state.password" type="password" />
+                <n-input
+                  v-model:value="state.password"
+                  type="password"
+                  placeholder="请输入密码"
+                />
               </n-form-item>
               <n-space justify="end">
                 <n-checkbox> 记住我 </n-checkbox>
