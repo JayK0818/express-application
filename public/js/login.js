@@ -1,4 +1,6 @@
-const { createApp, ref, shallowRef } = window.Vue
+const { createApp, ref, shallowRef, onMounted } = window.Vue
+const { createDiscreteApi } = window.naive
+const { message } = createDiscreteApi(['message'])
 ;(function () {
   const app = createApp({
     setup() {
@@ -6,6 +8,8 @@ const { createApp, ref, shallowRef } = window.Vue
         username: '',
         password: '',
       })
+      const checked = ref(false)
+      const spinning = ref(false)
       const formRef = ref(null)
       const rules = shallowRef({
         username: [
@@ -43,17 +47,52 @@ const { createApp, ref, shallowRef } = window.Vue
         try {
           formRef.value?.validate((errors) => {
             if (!errors) {
-              console.log('开始登录')
+              spinning.value = true
+              const { username, password } = state.value
+              service
+                .post('user/login', {
+                  username,
+                  password,
+                })
+                .then(() => {
+                  if (checked.value) {
+                    save_user(state.value)
+                  } else {
+                    remove_user()
+                  }
+                  window.location.href = '/'
+                  message.success('登录成功')
+                })
+                .catch((err) => {
+                  message.error(err)
+                })
+                .finally(() => {
+                  spinning.value = false
+                })
             }
           })
         } catch (err) {
           console.log(err)
         }
       }
+      onMounted(() => {
+        const user = get_user()
+        if (!user) {
+          return
+        }
+        if (user.username) {
+          state.value.username = user.username
+        }
+        if (user.password) {
+          state.value.password = user.password
+        }
+      })
       return {
         state,
         rules,
+        checked,
         formRef,
+        spinning,
         handleLogin,
       }
     },

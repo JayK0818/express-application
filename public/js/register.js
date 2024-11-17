@@ -1,5 +1,7 @@
 const { createApp, ref, shallowRef } = window.Vue
+const { createDiscreteApi } = window.naive
 
+const { message } = createDiscreteApi(['message'])
 ;(function () {
   const app = createApp({
     setup() {
@@ -8,6 +10,7 @@ const { createApp, ref, shallowRef } = window.Vue
         password: '',
         email: '',
       })
+      const spinning = ref(false)
       const formRef = ref(null)
       const rules = shallowRef({
         username: [
@@ -57,7 +60,24 @@ const { createApp, ref, shallowRef } = window.Vue
       const handleRegister = () => {
         formRef.value?.validate((errors) => {
           if (!errors) {
-            console.log('开始注册')
+            const { username, password, email } = state.value
+            spinning.value = true
+            service
+              .post('user/register', {
+                username,
+                password,
+                email,
+              })
+              .then(() => {
+                message.success('注册成功')
+                window.location.href = '/login'
+              })
+              .catch((err) => {
+                message.error(err)
+              })
+              .finally(() => {
+                spinning.value = false
+              })
           }
         })
       }
@@ -66,6 +86,7 @@ const { createApp, ref, shallowRef } = window.Vue
         rules,
         handleRegister,
         formRef,
+        spinning,
       }
     },
   })
