@@ -5,5 +5,7 @@
   "singleQuote": true,
   "bracketSpacing": true,
   "bracketLine": true,
-  "arrowParens": "always"
+  "arrowParens": "always",
+  "htmlWhitespaceSensitivity": "ignore",
+  "singleAttributePerLine": true
 }
