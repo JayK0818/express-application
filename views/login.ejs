@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <%- include('public'); -%>
     <title>登录</title>
     <style>
@@ -23,45 +26,80 @@
     <div class="login-page">
       <div id="login-form">
         <div class="title">用户登录</div>
-        <n-grid cols="24" item-responsive>
+        <n-grid
+          cols="24"
+          item-responsive
+        >
           <n-grid-item
-            span="0:24 560:18 720:12 1200:8"
-            offset="0 560:3 720:6 1200:8"
+            span="0:24 560:18 720:12 1000:8 1300:6"
+            offset="0 560:3 720:6 1000:8 1300:9"
           >
-            <n-form :model="state" :rules="rules" ref="formRef">
-              <n-form-item path="username" label="用户名">
-                <n-input
-                  v-model:value="state.username"
-                  @keydown.enter.prevent
-                  placeholder="请输入用户名"
-                />
-              </n-form-item>
-              <n-form-item path="password" label="密码">
-                <n-input
-                  v-model:value="state.password"
-                  type="password"
-                  placeholder="请输入密码"
-                />
-              </n-form-item>
-              <n-space justify="end">
-                <n-checkbox> 记住我 </n-checkbox>
-              </n-space>
-              <n-form-item>
-                <n-button
-                  round
-                  type="primary"
-                  size="large"
-                  @click="handleLogin"
-                  block
-                  >登录</n-button
+            <n-spin :show="spinning">
+              <n-form
+                :model="state"
+                :rules="rules"
+                ref="formRef"
+              >
+                <n-form-item
+                  path="username"
+                  label="用户名"
                 >
-              </n-form-item>
-            </n-form>
+                  <n-input
+                    v-model:value="state.username"
+                    @keydown.enter.prevent
+                    placeholder="请输入用户名"
+                  />
+                </n-form-item>
+                <n-form-item
+                  path="password"
+                  label="密码"
+                >
+                  <n-input
+                    v-model:value="state.password"
+                    type="password"
+                    placeholder="请输入密码"
+                    show-password-on="click"
+                  />
+                </n-form-item>
+                <n-space justify="space-between">
+                  <div>
+                    <span
+                      style="padding-right: 2px; color: rgba(0, 0, 0, 0.25)"
+                    >
+                      没有账号?
+                    </span>
+                    <n-button
+                      tag="a"
+                      text
+                      href="/register"
+                      type="primary"
+                    >
+                      点击注册
+                    </n-button>
+                  </div>
+                  <n-checkbox>记住我</n-checkbox>
+                </n-space>
+                <n-form-item>
+                  <n-button
+                    round
+                    type="primary"
+                    size="large"
+                    @click="handleLogin"
+                    block
+                  >
+                    登录
+                  </n-button>
+                </n-form-item>
+              </n-form>
+            </n-spin>
           </n-grid-item>
         </n-grid>
       </div>
     </div>
     <%- include('layout/footer'); -%>
-    <script type="text/javascript" src="js/login.js"></script>
+    <script
+      type="text/javascript"
+      src="js/login.js"
+    ></script>
   </body>
 </html>

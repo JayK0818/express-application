@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <%- include('public'); -%>
     <title>注册</title>
     <style>
@@ -23,48 +26,83 @@
     <div class="register-page">
       <div id="register-form">
         <div class="title">用户注册</div>
-        <n-grid cols="24" item-responsive>
+        <n-grid
+          cols="24"
+          item-responsive
+        >
           <n-grid-item
-            span="0:24 560:18 720:12 1200:8"
-            offset="0 560:3 720:6 1200:8"
+            span="0:24 560:18 720:12 1000:8 1300:6"
+            offset="0 560:3 720:6 1000:8 1300:9"
           >
-            <n-form :model="state" :rules="rules" ref="formRef">
-              <n-form-item path="username" label="用户名">
-                <n-input
-                  v-model:value="state.username"
-                  @keydown.enter.prevent
-                  placeholder="用户名 (6-20位 只能包含字母和数字)"
-                />
-              </n-form-item>
-              <n-form-item path="password" label="密码">
-                <n-input
-                  v-model:value="state.password"
-                  type="password"
-                  placeholder="请输入密码"
-                />
-              </n-form-item>
-              <n-form-item path="email" label="邮箱">
-                <n-input
-                  v-model:value="state.email"
-                  placeholder="请输入邮箱"
-                ></n-input>
-              </n-form-item>
-              <n-form-item>
-                <n-button
-                  round
-                  type="primary"
-                  size="large"
-                  @click="handleRegister"
-                  block
-                  >注册</n-button
+            <n-spin :show="spinning">
+              <n-form
+                :model="state"
+                :rules="rules"
+                ref="formRef"
+              >
+                <n-form-item
+                  path="username"
+                  label="用户名"
                 >
-              </n-form-item>
-            </n-form>
+                  <n-input
+                    v-model:value="state.username"
+                    @keydown.enter.prevent
+                    placeholder="用户名 (6-20位 只能包含字母和数字)"
+                  />
+                </n-form-item>
+                <n-form-item
+                  path="password"
+                  label="密码"
+                >
+                  <n-input
+                    v-model:value="state.password"
+                    type="password"
+                    placeholder="请输入密码"
+                    show-password-on="click"
+                  />
+                </n-form-item>
+                <n-form-item
+                  path="email"
+                  label="邮箱"
+                >
+                  <n-input
+                    v-model:value="state.email"
+                    placeholder="请输入邮箱"
+                  ></n-input>
+                </n-form-item>
+                <n-space justify="end">
+                  <span style="color: rgba(0, 0, 0, 0.25)">已有账号,</span>
+                  <n-button
+                    type="primary"
+                    href="/login"
+                    tag="a"
+                    text
+                  >
+                    去登录
+                  </n-button>
+                </n-space>
+                <n-form-item>
+                  <n-button
+                    round
+                    type="primary"
+                    size="large"
+                    @click="handleRegister"
+                    block
+                    :loading="spinning"
+                  >
+                    注册
+                  </n-button>
+                </n-form-item>
+              </n-form>
+            </n-spin>
           </n-grid-item>
         </n-grid>
       </div>
     </div>
     <%- include('layout/footer'); -%>
-    <script type="text/javascript" src="js/register.js"></script>
+    <script
+      type="text/javascript"
+      src="js/register.js"
+    ></script>
   </body>
 </html>
