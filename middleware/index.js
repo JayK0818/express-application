@@ -44,9 +44,6 @@ const userAuthorization = ({ is_auth_required = true } = {}) => {
       }
       const result = validateToken(token)
       if (!result) {
-        if (is_redirect) {
-          return res.redirect('/login')
-        }
         return next('请重新登录')
       }
       const user = await UserModel.findById(result.user_id)

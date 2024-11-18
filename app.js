@@ -13,6 +13,9 @@ const mongoose = require('mongoose')
 const responseTime = require('response-time')
 const session = require('express-session')
 const mongoStore = require('connect-mongo')
+const cors = require('cors')
+const { rateLimit } = require('express-rate-limit')
+const RateLimitMongoStore = require('rate-limit-mongo')
 
 require('dotenv').config({
   path: ['.env', `.env.${process.env.NODE_ENV}`],
@@ -20,6 +23,34 @@ require('dotenv').config({
 const PORT = process.env.PORT || 3000
 
 const app = express()
+
+app.use(
+  cors({
+    methods: 'POST, GET',
+    credentials: true,
+    preflightContinue: false,
+  })
+)
+
+app.use(
+  rateLimit({
+    windowMs: 1000 * 5,
+    limit: 10,
+    legacyHeaders: false,
+    standardHeaders: false,
+    message: '请求次数过多, 请稍后再试',
+    store: new RateLimitMongoStore({
+      uri: 'mongodb://127.0.0.1:27017/mongodb',
+      expireTimeMs: 1000 * 5,
+      collectionName: 'rate-limit',
+    }),
+    skip: (req, res) => {
+      const path = req.url
+      console.log('is-limit-skip', !path.includes('/api'))
+      return !path.includes('/api')
+    },
+  })
+)
 
 /**
  * create a middleware that adds a X-Response-Time header to responses.
@@ -50,6 +81,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         'script-src': ["'self'", "'unsafe-eval'"],
+        'connect-src': ['*'],
       },
     },
   })
@@ -172,7 +204,7 @@ app.use((req, res, next) => {
 })
 // 错误处理
 app.use(function (err, req, res, next) {
-  res.status(500).original_json({
+  res.status(200).original_json({
     code: 0,
     data: null,
     msg: typeof err === 'string' ? err : err.message ? err.message : err,

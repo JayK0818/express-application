@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <%- include('public'); -%>
+    <title>TodoList</title>
+  </head>
+  <body>
+    <%- include('layout/header', { user: user }); -%>
+    <div id="todo-list-app">
+      <div>
+        <n-input
+          placeholder="请输入代办事项"
+        ></n-input>
+        <n-button type="primary">确定</n-button>
+      </div>
+    </div>
+    <%- include('layout/footer'); -%>
+    <script
+      type="text/javascript"
+      src="js/user-todo-list.js"
+    ></script>
+  </body>
+</html>

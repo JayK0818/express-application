@@ -1,3 +1,4 @@
+const UserModel = require('../model/user')
 /**
  * @description 用户登录
  */
@@ -16,7 +17,13 @@ const userRegister = async (req, res, next) => {
  * @description 用户todo-list
  */
 const userTodoList = async (req, res, next) => {
-  res.render('todo-list')
+  const user = await UserModel.findById(req.session.user)
+  if (!user) {
+    return res.redirect('/register')
+  }
+  res.render('todo-list', {
+    user: user.username,
+  })
 }
 
 /**

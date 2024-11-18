@@ -7,7 +7,7 @@ const chalk = require('chalk')
 /**
  * @description 用户注册
  */
-const userRegistry = async (req, res, next) => {
+const userRegister = async (req, res, next) => {
   try {
     const { username, password, email } = req.body
     const isUserExist = await UserModel.findOne({
@@ -83,7 +83,7 @@ const userLogout = async (req, res, next) => {
 }
 
 module.exports = {
-  userRegistry,
+  userRegister,
   userLogin,
   userLogout,
 }

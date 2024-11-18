@@ -60,8 +60,8 @@ const { message } = createDiscreteApi(['message'])
                   } else {
                     remove_user()
                   }
-                  window.location.href = '/'
                   message.success('登录成功')
+                  window.location.href = '/'
                 })
                 .catch((err) => {
                   message.error(err)
@@ -79,6 +79,9 @@ const { message } = createDiscreteApi(['message'])
         const user = get_user()
         if (!user) {
           return
+        }
+        if (user.username || user.password) {
+          checked.value = true
         }
         if (user.username) {
           state.value.username = user.username

@@ -26,7 +26,7 @@ const { message } = createDiscreteApi(['message'])
               }
               return true
             },
-            trigger: ['input', 'blue'],
+            trigger: ['input', 'blur'],
           },
         ],
         password: [

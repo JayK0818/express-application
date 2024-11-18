@@ -7,7 +7,7 @@ const { validateUsername } = require('../util/index')
 
 // 用户注册
 router.post(
-  '/registry',
+  '/register',
   validate([
     body('username', '用户名不得为空').trim().notEmpty(),
     body('username', '用户名长度不合法').isLength({
@@ -22,7 +22,7 @@ router.post(
       message: '请不要传递多余字段',
     }),
   ]),
-  userController.userRegistry
+  userController.userRegister
 )
 
 // 用户登录

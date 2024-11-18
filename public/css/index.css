@@ -1,3 +1,36 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+/* page-header */
+header.header {
+  display: flex;
+  padding: 0 20px;
+  height: 60px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e8e8e8;
+}
+header.header .title {
+  font-size: 24px;
+  font-weight: bold;
+  font-style: italic;
+}
+header.header .user-text,
+header.header .logout-text {
+  padding: 0 5px;
+  font-size: 14px;
+  font-style: normal;
+  color: rgb(0, 0, 0, 0.85);
+}
+header.header .logout-text {
+  cursor: pointer;
+  transition: color 0.25s;
+}
+header.header .logout-text:hover {
+  text-decoration: underline;
+}
 .footer {
   padding: 16px 0;
   text-align: center;
@@ -13,7 +46,8 @@
   align-items: center;
 }
 .login-page[v-cloak],
-.register-page[v-cloak] {
+.register-page[v-cloak],
+#todo-list-app[v-cloak] {
   display: none;
 }
 body {
@@ -25,4 +59,9 @@ body {
   right: 0;
   bottom: 0;
   background-color: #ffffff;
+}
+/* todo-list-app */
+#todo-list-app {
+  flex: 1;
+  min-height: 0;
 }
