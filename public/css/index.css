@@ -13,7 +13,7 @@ header.header {
   border-bottom: 1px solid #e8e8e8;
 }
 header.header .title {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
   font-style: italic;
 }
@@ -62,6 +62,21 @@ body {
 }
 /* todo-list-app */
 #todo-list-app {
+  padding: 10px 0;
   flex: 1;
-  min-height: 0;
+  min-height: 400px;
+}
+#todo-list-app .todo-header {
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+}
+/* 标题 */
+#todo-list-app .title {
+  margin: 10px 0;
+  padding: 10px 0;
+  font-size: 48px;
+  font-weight: bold;
+  text-align: center;
+  color: #18a058;
 }

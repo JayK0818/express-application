@@ -12,12 +12,29 @@
   <body>
     <%- include('layout/header', { user: user }); -%>
     <div id="todo-list-app">
-      <div>
-        <n-input
-          placeholder="请输入代办事项"
-        ></n-input>
-        <n-button type="primary">确定</n-button>
-      </div>
+      <n-spin :show="spinning">
+        <n-grid cols="24" item-responsive>
+          <n-grid-item span="500:20 800:12 1200:10" offset="500:2 800:6 1200:7">
+            <div class="title">What next todo?</div>
+            <div class="todo-header">
+              <n-input
+                placeholder="请输入代办事项"
+                v-model:value.trim="text"
+                :clearable="true"
+                style="border-radius: 0;"
+                size="large"
+              ></n-input>
+              <n-button
+                type="primary"
+                size="large"
+                :loading="spinning"
+                style="border-radius: 0;"
+                @click.stop="handle_add_todo"
+              >确定</n-button>
+            </div>
+          </n-grid-item>
+        </n-grid>
+      </n-spin>
     </div>
     <%- include('layout/footer'); -%>
     <script

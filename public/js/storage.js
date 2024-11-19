@@ -28,3 +28,28 @@ const remove_user = () => {
     window.localStorage.removeItem(key)
   } catch (err) {}
 }
+
+/**
+ * @description 存储token
+ */
+const token_key = '__todo_user_token__'
+const save_user_token = (token) => {
+  try {
+    window.localStorage.setItem(token_key, token)
+  } catch (err) {}
+}
+
+/**
+ * @description 获取用户token
+ */
+const get_user_token = () => {
+  try {
+    const data = window.localStorage.getItem(token_key)
+    if (data) {
+      return data
+    }
+    return ''
+  } catch (err) {
+    return ''
+  }
+}

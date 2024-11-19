@@ -43,6 +43,9 @@ const { message } = createDiscreteApi(['message'])
           },
         ],
       })
+      /**
+       * @description 用户登录
+       */
       const handleLogin = () => {
         try {
           formRef.value?.validate((errors) => {
@@ -54,12 +57,14 @@ const { message } = createDiscreteApi(['message'])
                   username,
                   password,
                 })
-                .then(() => {
+                .then((res) => {
                   if (checked.value) {
                     save_user(state.value)
                   } else {
                     remove_user()
                   }
+                  const { token } = res
+                  save_user_token(token)
                   message.success('登录成功')
                   window.location.href = '/'
                 })

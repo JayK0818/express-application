@@ -1,6 +1,16 @@
 const service = axios.create({
   baseURL: 'http://127.0.0.1:3000/api',
 })
+/**
+ * @description 拦截请求, 添加token
+ */
+service.interceptors.request.use((config) => {
+  const token = get_user_token()
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`
+  }
+  return config
+})
 
 /**
  * @description 拦截响应

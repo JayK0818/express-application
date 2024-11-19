@@ -46,7 +46,6 @@ app.use(
     }),
     skip: (req, res) => {
       const path = req.url
-      console.log('is-limit-skip', !path.includes('/api'))
       return !path.includes('/api')
     },
   })

@@ -37,7 +37,7 @@ const userAuthorization = ({ is_auth_required = true } = {}) => {
         (req.headers['authorization'] ?? '').split('Bearer')[1] ?? ''
       ).trim()
       if (!token) {
-        return res.status(401).original_json({
+        return res.status(200).original_json({
           msg: '请传递token',
           code: 0,
         })
