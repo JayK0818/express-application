@@ -22,15 +22,26 @@ const addTodo = async (req, res, next) => {
 const getTodoList = async (req, res, next) => {
   try {
     // req.session.user 为下发cookie时赋的值, 过期时值为undefined
-    console.log(req.session.user, req.user)
+    const { page = 1, size = 10 } = req.query ?? {}
+    const skip = (page - 1) * size
     const result = await TodoModel.find(
       {
         is_del: 0,
         user: req.user.id,
       },
       '_id text completed user'
-    ).populate('user', '_id username email')
-    res.json(result)
+    )
+      .skip(skip)
+      .limit(size)
+      .populate('user', '_id username email')
+    const length = await TodoModel.estimatedDocumentCount()
+    const total_page = Math.ceil(length / size)
+    res.json({
+      list: result,
+      page: Number(page),
+      total_page,
+      size: Number(size),
+    })
   } catch (err) {
     next(err)
   }

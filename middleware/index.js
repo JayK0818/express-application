@@ -13,7 +13,7 @@ const validate = (validations) => {
         ? result.array()
         : '参数校验未通过'
       if (!result.isEmpty()) {
-        return res.status(400).original_json({
+        return res.status(200).original_json({
           msg: message.map((item) => item.msg).join(','),
           code: 0,
           data: null,

@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const { validate, userAuthorization } = require('../middleware/index.js')
-const { body, param } = require('express-validator')
+const { body, param, query } = require('express-validator')
 const { validateMongooseId } = require('../util/index')
 
 // creates a new router object.
@@ -28,7 +28,15 @@ router.post(
 /**
  * @description 获取代办事项列表
  */
-router.get('/list', userAuthorization(), todoController.getTodoList)
+router.get(
+  '/list',
+  validate([
+    query('page').trim().optional().isNumeric().withMessage('页数必须为数字'),
+    query('size').trim().optional().isNumeric().withMessage('数量必须为数字'),
+  ]),
+  userAuthorization(),
+  todoController.getTodoList
+)
 
 /**
  * @description 更新用户代办事项
