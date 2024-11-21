@@ -1,6 +1,6 @@
-const { createApp, ref, onMounted } = window.Vue
+const { createApp, ref, onMounted, h, shallowRef } = window.Vue
 const { createDiscreteApi } = window.naive
-const { message } = createDiscreteApi(['message'])
+const { message, modal } = createDiscreteApi(['message', 'modal'])
 
 ;(function () {
   const app = createApp({
@@ -8,6 +8,8 @@ const { message } = createDiscreteApi(['message'])
       const title = ref('What next todo?')
       const text = ref('')
       const spinning = ref(false)
+      const loading = ref(false)
+      const modelRef = shallowRef(null)
       const state = ref({
         page: 1,
         size: 5,
@@ -61,6 +63,56 @@ const { message } = createDiscreteApi(['message'])
             spinning.value = false
           })
       }
+      /**
+       * @description 切换是否完成todo
+       */
+      const toggle_todo_completed = (todo) => {
+        loading.value = true
+      }
+      const handle_toggle_todo = (todo) => {
+        modelRef.value = modal.create({
+          title: todo.completed ? `取消完成` : '确认完成',
+          preset: 'card',
+          content: '确认切换当前任务的完成状态吗',
+          style: {
+            width: '460px',
+          },
+          footer: () =>
+            h(
+              'div',
+              {
+                style: {
+                  padding: '12px 0',
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                },
+              },
+              [
+                h(
+                  naive.NButton,
+                  {
+                    type: 'error',
+                    onClick: () => modelRef.value.destroy(),
+                    size: 'small',
+                  },
+                  () => '关闭'
+                ),
+                h(
+                  naive.NButton,
+                  {
+                    type: 'primary',
+                    onClick: () => toggle_todo_completed(todo),
+                    size: 'small',
+                    loading: loading.value,
+                    style: { marginLeft: '10px' },
+                  },
+                  () => '确定'
+                ),
+              ]
+            ),
+        })
+      }
       onMounted(() => {
         get_user_todo_list()
       })
@@ -69,6 +121,7 @@ const { message } = createDiscreteApi(['message'])
         spinning,
         text,
         state,
+        handle_toggle_todo,
         handle_add_todo,
       }
     },

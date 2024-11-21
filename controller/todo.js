@@ -71,12 +71,13 @@ const getTodo = async (req, res, next) => {
 const updateTodo = async (req, res, next) => {
   try {
     const { id, text = '', toggle = false } = req.body
-    const todo = await TodoModel.findById(id)
+    const todo = await TodoModel.findOne({
+      _id: id,
+      user: req.user.id,
+      is_del: 0,
+    })
     if (!todo) {
       throw new Error('代办事项不存在, 无法更新!')
-    }
-    if (todo.user.toString() !== req.user.id) {
-      throw new Error('只能更新本人代办事项')
     }
     await TodoModel.updateOne(
       {
@@ -99,12 +100,13 @@ const updateTodo = async (req, res, next) => {
 const deleteTodo = async (req, res, next) => {
   try {
     const { id } = req.body
-    const todo = await TodoModel.findById(id)
+    const todo = await TodoModel.findOne({
+      _id: id,
+      user: req.user.id,
+      is_del: 0,
+    })
     if (!todo) {
       throw new Error('代办事项不存在')
-    }
-    if (todo.user.toString() !== req.user.id) {
-      throw new Error('只能删除本人的代办事项')
     }
     await TodoModel.updateOne(
       {

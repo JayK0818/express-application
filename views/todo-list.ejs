@@ -14,7 +14,7 @@
     <div id="todo-list-app">
       <n-spin :show="spinning">
         <n-grid cols="24" item-responsive>
-          <n-grid-item span="500:20 800:12 1200:10" offset="500:2 800:6 1200:7">
+          <n-grid-item span="500:20 800:14 1200:12" offset="500:2 800:5 1200:6">
             <div class="title">What next todo?</div>
             <div class="todo-header">
               <n-input
@@ -32,6 +32,46 @@
                 @click.stop="handle_add_todo"
               >确定</n-button>
             </div>
+            <template v-if="Array.isArray(state.list) && state.list.length">
+              <ul class="todo-list">
+                <li
+                  v-for="item in state.list"
+                  :key="item._id"
+                  class="todo-item"
+                  :class="{
+                    completed: item.completed
+                  }"
+                >
+                  <n-checkbox
+                    :checked="item.completed"
+                    @click.stop="handle_toggle_todo(item)"
+                  ></n-checkbox>
+                  <span class="todo-text">{{ item.text }}</span>
+                  <span>
+                    <n-button
+                      type="primary"
+                      size="small"
+                      tag="span"
+                      text
+                    >编辑</n-button>
+                    <n-button
+                      type="error"
+                      size="small"
+                      tag="span"
+                      text
+                      style="margin-left: 10px;"
+                    >删除</n-button>
+                  </span>
+                </li>
+              </ul>
+              <n-pagination
+                v-model:page="state.page"
+                :page-count="state.total_page"
+              ></n-pagination>
+            </template>
+            <template v-else>
+              <n-empty description="暂无代办事项~"></n-empty>
+            </template>
           </n-grid-item>
         </n-grid>
       </n-spin>
