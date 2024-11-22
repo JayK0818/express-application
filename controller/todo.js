@@ -34,7 +34,9 @@ const getTodoList = async (req, res, next) => {
       .skip(skip)
       .limit(size)
       .populate('user', '_id username email')
-    const length = await TodoModel.estimatedDocumentCount()
+    const length = await TodoModel.countDocuments({
+      is_del: 0,
+    })
     const total_page = Math.ceil(length / size)
     res.json({
       list: result,

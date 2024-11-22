@@ -26,6 +26,6 @@ service.interceptors.response.use(
     }
   },
   (err) => {
-    console.log(err)
+    return Promise.reject(err.status === 429 ? err.response.data : err?.message)
   }
 )

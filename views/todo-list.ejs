@@ -27,7 +27,6 @@
               <n-button
                 type="primary"
                 size="large"
-                :loading="spinning"
                 style="border-radius: 0;"
                 @click.stop="handle_add_todo"
               >确定</n-button>
@@ -60,6 +59,7 @@
                       tag="span"
                       text
                       style="margin-left: 10px;"
+                      @click.stop="handle_delete_todo(item)"
                     >删除</n-button>
                   </span>
                 </li>
@@ -70,7 +70,9 @@
               ></n-pagination>
             </template>
             <template v-else>
-              <n-empty description="暂无代办事项~"></n-empty>
+              <div style="padding: 20px 0;">
+                <n-empty description="暂无代办事项~" size="small"></n-empty>
+              </div>
             </template>
           </n-grid-item>
         </n-grid>

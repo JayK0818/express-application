@@ -1,7 +1,21 @@
-<header class="header">
+<header
+  class="header"
+  id="header-app"
+>
   <span class="title">TodoList</span>
   <span>
-    <i class="user-text"><%= user %></i>
-    <i class="logout-text">退出登录</i>
+    <n-dropdown
+      trigger="hover"
+      :options="dropdown_options_list"
+    >
+      <n-button
+        text
+        type="primary"
+      >
+        <%= user %>
+      </n-button>
+    </n-dropdown>
   </span>
 </header>
+
+<script src="/js/header.js"></script>
