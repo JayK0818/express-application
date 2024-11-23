@@ -7,11 +7,37 @@
       const dropdown_options_list = ref([
         {
           label: '退出登录',
-          key: Math.random(),
+          key: 'logout',
         },
       ])
-      const handle_logout = () => {}
+      const handle_logout = () => {
+        const _message = message.info('正在退出登录...', {
+          duration: 0,
+        })
+        service
+          .post('user/logout')
+          .then(() => {
+            window.location.href = '/login'
+          })
+          .catch((err) => {
+            message.error(err)
+          })
+          .finally(() => {
+            _message.destroy()
+          })
+      }
+      /**
+       * @description 下拉菜单筛选
+       */
+      const handle_dropdown_select = (key) => {
+        switch (key) {
+          case 'logout':
+            handle_logout()
+            break
+        }
+      }
       return {
+        handle_dropdown_select,
         dropdown_options_list,
       }
     },

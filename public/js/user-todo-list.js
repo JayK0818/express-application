@@ -16,6 +16,14 @@ const { message, modal } = createDiscreteApi(['message', 'modal'])
         list: [],
         total_page: 0,
       })
+      const update_todo_modal_props = ref({
+        visible: false,
+        todo_props: {
+          completed: false,
+          text: '',
+          id: '',
+        },
+      })
       /**
        * @description 新增代办事项
        */
@@ -44,13 +52,13 @@ const { message, modal } = createDiscreteApi(['message', 'modal'])
       /**
        * @description 获取用户todo-list列表
        */
-      const get_user_todo_list = () => {
+      const get_user_todo_list = (page = 0) => {
         spinning.value = true
-        const { page, size } = state.value
+        const { size } = state.value
         service
           .get('todo/list', {
             params: {
-              page,
+              page: page || state.value.page,
               size,
             },
           })
@@ -100,7 +108,6 @@ const { message, modal } = createDiscreteApi(['message', 'modal'])
               'div',
               {
                 style: {
-                  padding: '12px 0',
                   display: 'flex',
                   justifyContent: 'flex-end',
                   alignItems: 'center',
@@ -165,7 +172,6 @@ const { message, modal } = createDiscreteApi(['message', 'modal'])
               'div',
               {
                 style: {
-                  padding: '12px 0',
                   display: 'flex',
                   justifyContent: 'flex-end',
                   alignItems: 'center',
@@ -197,6 +203,53 @@ const { message, modal } = createDiscreteApi(['message', 'modal'])
             ),
         })
       }
+      /**
+       * @description 页面跳转
+       */
+      const handle_jump_page = (page) => {
+        get_user_todo_list(page)
+      }
+      /**
+       * @description 更新todo
+       */
+      const handle_update_todo = (todo) => {
+        const { _id, text, completed } = todo
+        update_todo_modal_props.value = {
+          visible: true,
+          todo_props: {
+            text: text,
+            id: _id,
+            completed,
+          },
+        }
+      }
+      /**
+       * @description 确认更新代办事项
+       */
+      const handle_confirm_update_todo = () => {
+        const { todo_props } = update_todo_modal_props.value
+        if (todo_props.text === '') {
+          message.error('代办事项不得为空')
+          return
+        }
+        loading.value = true
+        service
+          .post('todo/update', {
+            id: todo_props.id,
+            text: todo_props.text,
+          })
+          .then(() => {
+            message.success('success')
+            update_todo_modal_props.value.visible = false
+            get_user_todo_list()
+          })
+          .catch((err) => {
+            message.error(err)
+          })
+          .finally(() => {
+            loading.value = false
+          })
+      }
       onMounted(() => {
         get_user_todo_list()
       })
@@ -205,9 +258,14 @@ const { message, modal } = createDiscreteApi(['message', 'modal'])
         spinning,
         text,
         state,
+        update_todo_modal_props,
+        loading,
+        handle_jump_page,
         handle_toggle_todo,
         handle_add_todo,
         handle_delete_todo,
+        handle_update_todo,
+        handle_confirm_update_todo,
       }
     },
   })

@@ -43,6 +43,7 @@
                 >
                   <n-checkbox
                     :checked="item.completed"
+                    size="large"
                     @click.stop="handle_toggle_todo(item)"
                   ></n-checkbox>
                   <span class="todo-text">{{ item.text }}</span>
@@ -52,6 +53,7 @@
                       size="small"
                       tag="span"
                       text
+                      @click.stop="handle_update_todo(item)"
                     >编辑</n-button>
                     <n-button
                       type="error"
@@ -67,6 +69,7 @@
               <n-pagination
                 v-model:page="state.page"
                 :page-count="state.total_page"
+                @update:page="handle_jump_page"
               ></n-pagination>
             </template>
             <template v-else>
@@ -77,6 +80,44 @@
           </n-grid-item>
         </n-grid>
       </n-spin>
+      <!-- 更新modal -->
+       <n-modal
+        preset="card"
+        title="更新代办事项"
+        size="huge"
+        :style="{
+          width: '480px'
+        }"
+        :bordered="false"
+        v-model:show="update_todo_modal_props.visible"
+       >
+        <n-form
+        >
+          <n-form-item
+            label="代办事项"
+          >
+            <n-input
+              placeholder="请输入代办事项"
+              type="textarea"
+              v-model:value.trim="update_todo_modal_props.todo_props.text"
+              :autosize="{
+                minRows: 6,
+              }"
+              :show-count="true"
+              :maxlength="50"
+            ></n-input>
+          </n-form-item>
+        </n-form>
+        <template #footer>
+          <div style="text-align: right;">
+            <n-button
+              type="primary"
+              :loading="loading"
+              @click.stop="handle_confirm_update_todo"
+            >确定</n-button>
+          </div>
+        </template>
+       </n-modal>
     </div>
     <%- include('layout/footer'); -%>
     <script

@@ -4,6 +4,15 @@ const TodoModel = require('../model/todo')
  */
 const addTodo = async (req, res, next) => {
   try {
+    const { text = '' } = req.body ?? {}
+    const isExist = await TodoModel.findOne({
+      is_del: 0,
+      text,
+      user: req.user.id,
+    })
+    if (isExist) {
+      throw new Error('代办事项请勿重复创建!')
+    }
     const todo = new TodoModel({
       ...req.body,
       completed: false,
@@ -36,6 +45,7 @@ const getTodoList = async (req, res, next) => {
       .populate('user', '_id username email')
     const length = await TodoModel.countDocuments({
       is_del: 0,
+      user: req.user.id,
     })
     const total_page = Math.ceil(length / size)
     res.json({
@@ -80,6 +90,16 @@ const updateTodo = async (req, res, next) => {
     })
     if (!todo) {
       throw new Error('代办事项不存在, 无法更新!')
+    }
+    // 判断是否存在
+    if (text) {
+      const result = await TodoModel.find({
+        text,
+        is_del: 0,
+      })
+      if (Array.isArray(result) && result.find((item) => item._id !== id)) {
+        throw new Error('代办事项已存在, 无法更新')
+      }
     }
     await TodoModel.updateOne(
       {

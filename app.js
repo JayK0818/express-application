@@ -35,7 +35,7 @@ app.use(
 app.use(
   rateLimit({
     windowMs: 1000 * 5,
-    limit: 10,
+    limit: 20,
     legacyHeaders: false,
     standardHeaders: false,
     message: '请求次数过多, 请稍后再试',

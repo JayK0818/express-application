@@ -38,5 +38,6 @@ router.post(
 /**
  * @description 用户退出登录
  */
+router.post('/logout', userController.userLogout)
 
 module.exports = router

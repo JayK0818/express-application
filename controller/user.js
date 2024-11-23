@@ -77,8 +77,12 @@ const userLogin = async (req, res, next) => {
  * @description 用户退出登录
  */
 const userLogout = async (req, res, next) => {
-  req.session.destroy(() => {
-    res.redirect('/')
+  req.session.destroy((err) => {
+    if (err) {
+      next(err)
+    } else {
+      res.json(null)
+    }
   })
 }
 
